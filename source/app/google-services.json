@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "489283104479",
+    "firebase_url": "https://dateish-5d381.firebaseio.com",
+    "project_id": "dateish-5d381",
+    "storage_bucket": "dateish-5d381.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489283104479:android:a3b4eb52da6a109116436a",
+        "android_client_info": {
+          "package_name": "com.example.dateish"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "489283104479-c2lmql9tc3o5o5tjh5gopfknss7j5dc3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dateish",
+            "certificate_hash": "56c143fde3c5dd452f8e667e8d5631ae39ff03b3"
+          }
+        },
+        {
+          "client_id": "489283104479-ae6sle3osu312is207p6h27olhv1uk32.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4t-jpcdIHeIe411HGwKKUuoIESlgrpDo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "489283104479-ae6sle3osu312is207p6h27olhv1uk32.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
