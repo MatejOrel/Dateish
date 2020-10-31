@@ -28,8 +28,12 @@ android {
     }
 }
 
-dependencies {
+repositories {
+    mavenCentral()
+    google()
+}
 
+dependencies {
     implementation 'com.lorentzos.swipecards:library:1.0.9'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
@@ -43,7 +47,10 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:6.3.0'
     implementation 'com.firebaseui:firebase-ui-database:6.3.0'
     implementation 'androidx.cardview:cardview:1.0.0'
+    implementation platform('com.google.firebase:firebase-bom:26.0.0')
+    implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }
-
 
 apply plugin: 'com.google.gms.google-services'
