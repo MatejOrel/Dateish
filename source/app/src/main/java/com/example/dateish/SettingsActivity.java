@@ -40,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
     private ImageView mProfileImage;
     private FirebaseAuth mAuth;
     private DatabaseReference mUserDatabase;
-    private String userId, name, phone, profileImageUrl;
+    private String userId, name, phone, profileImageUrl, userSex;
     private Uri resultUri;
 
     @Override
@@ -48,7 +48,6 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        String userSex = getIntent().getExtras().getString("userSex");
         mNameField = (EditText) findViewById(R.id.name);
         mPhoneField = (EditText) findViewById(R.id.phone);
         mProfileImage = (ImageView) findViewById(R.id.profileImage);
@@ -57,7 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(userSex).child(userId);
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
 
         getUserInfo();
         mProfileImage.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +98,9 @@ public class SettingsActivity extends AppCompatActivity {
                         phone = map.get("phone").toString();
                         mPhoneField.setText(phone);
                     }
+                    if(map.get("sex") != null){
+                        userSex = map.get("sex").toString();
+                    }
                     if(map.get("profileImageUrl") != null){
                         profileImageUrl = map.get("profileImageUrl").toString();
                         Glide.with(getApplication()).load(profileImageUrl).into(mProfileImage);
@@ -130,7 +132,6 @@ public class SettingsActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println(resultUri + " " + "eeeeeeeeeeeeeeeeeeee");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
             byte[] data = baos.toByteArray();
@@ -174,8 +175,6 @@ public class SettingsActivity extends AppCompatActivity {
         if(requestCode == 1 && resultCode == Activity.RESULT_OK){
             Uri imageUri = data.getData();
             resultUri = imageUri;
-            System.out.println(data + " " + "ccccccccccccccccccccccccccccccc");
-            System.out.println(resultUri + " " + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             mProfileImage.setImageURI(resultUri);
         }
     }
