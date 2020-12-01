@@ -1,11 +1,11 @@
-package com.example.dateish;
+package com.example.dateish.Matches;
 
-public class cards {
+public class MatchesObject {
     private String userId;
     private String name;
     private String profileImageUrl;
 
-    public cards(String userId, String name, String profileImageUrl){
+    public MatchesObject(String userId, String name, String profileImageUrl){
         this.userId = userId;
         this.name = name;
         this.profileImageUrl = profileImageUrl;
@@ -28,7 +28,5 @@ public class cards {
     public String getProfileImageUrl(){
         return profileImageUrl;
     }
-    public void setProfileImageUrl(String profileImageUrl){
-        this.profileImageUrl = profileImageUrl;
-    }
+    public void setProfileImageUrl(String profileImageUrl){ this.profileImageUrl = profileImageUrl; }
 }
