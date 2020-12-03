@@ -11,8 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Dateish">
-        <activity android:name=".Matches.MatchesActivity"></activity>
-        <activity android:name=".SettingsActivity" />
+        <activity
+            android:name=".Chats.ChatActivity"
+            android:parentActivityName=".Matches.MatchesActivity" />
+        <activity
+            android:name=".Matches.MatchesActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".ChooseLoginRegistrationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
