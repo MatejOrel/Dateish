@@ -42,7 +42,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Button mBack, mConfirm;
     private ImageView mProfileImage;
     private RadioGroup mChooseSex;
-    private RadioButton mMale, mFemale;
+    private View mMale, mFemale;
     private String showSex;
     private FirebaseAuth mAuth;
     private DatabaseReference mUserDatabase;
@@ -82,6 +82,9 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveUserInformation();
+                finish();
+                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
         mBack.setOnClickListener(new View.OnClickListener() {
@@ -118,14 +121,14 @@ public class SettingsActivity extends AppCompatActivity {
                     if(map.get("showSex") != null){
                         showSex = map.get("showSex").toString();
                         if(showSex.equals("Male")){
-                            mMale = (RadioButton)findViewById(R.id.men);
+                            mMale = mChooseSex.findViewById(R.id.men);
                             mMale.performClick();
 
                         }
                            // mChooseSex.check(R.id.men);
                         else{
-                            mFemale = (RadioButton)findViewById(R.id.women);
-                            mFemale.setChecked(true);
+                            mFemale = mChooseSex.findViewById(R.id.women);
+                            mFemale.performClick();
                         }
                            // mChooseSex.check(R.id.women);
                     }
@@ -181,7 +184,6 @@ public class SettingsActivity extends AppCompatActivity {
                             Map newImage = new HashMap();
                             newImage.put("profileImageUrl", uri.toString());
                             mUserDatabase.updateChildren(newImage);
-                            finish();
                             return;
                         }
                     }).addOnFailureListener(new OnFailureListener() {

@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private String userSex;
     private String oppositeUserSex;
     public void checkUserSex(){
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -144,16 +143,9 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     if(snapshot.child("sex").getValue() != null){
-                        userSex = snapshot.child("sex").getValue().toString();
-                        switch (userSex){
-                            case "Male":
-                                oppositeUserSex = "Female";
-                                break;
-                            case "Female":
-                                oppositeUserSex = "Male";
-                                break;
-                        }
-                        getOppositeSexUsers();
+
+                        oppositeUserSex = snapshot.child("showSex").getValue().toString();
+                        getSearches();
                     }
                 }
             }
@@ -165,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void getOppositeSexUsers(){
+    public void getSearches(){
         usersDb.addChildEventListener(new ChildEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -174,7 +166,8 @@ public class MainActivity extends AppCompatActivity {
                     if (snapshot.exists() &&
                             (!snapshot.child("connections").child("nope").hasChild(currentUid) || ChronoUnit.DAYS.between(LocalDateTime.parse((CharSequence) snapshot.child("connections").child("nope").child(currentUid).getValue()), LocalDateTime.now()) > 7) &&
                             (!snapshot.child("connections").child("yeps").hasChild(currentUid) || ChronoUnit.DAYS.between(LocalDateTime.parse((CharSequence) snapshot.child("connections").child("yeps").child(currentUid).getValue()), LocalDateTime.now()) > 7) &&
-                            snapshot.child("sex").getValue().toString().equals(oppositeUserSex)) {
+                            snapshot.child("sex").getValue().toString().equals(oppositeUserSex) &&
+                            !snapshot.getKey().equals(currentUid.toString())) {
                         cards item = new cards(snapshot.getKey(), snapshot.child("name").getValue().toString(), snapshot.child("profileImageUrl").getValue().toString());
                         rowItems.add(item);
                         arrayAdapter.notifyDataSetChanged();
