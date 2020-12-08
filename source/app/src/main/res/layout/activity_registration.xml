@@ -12,6 +12,11 @@
         android:layout_height="wrap_content"
         android:hint="name"
         android:id="@+id/name"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="last name"
+        android:id="@+id/lastname"/>
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

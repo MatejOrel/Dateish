@@ -1,6 +1,7 @@
 package com.example.dateish;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dateish.Cards.arrayAdapter;
@@ -23,12 +25,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private com.example.dateish.Cards.arrayAdapter arrayAdapter;
-    private int i;
 
     private FirebaseAuth mAuth;
     private String currentUid;
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 arrayAdapter.notifyDataSetChanged();
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onLeftCardExit(Object dataObject) {
                 //Do something on the left!
@@ -70,21 +74,25 @@ public class MainActivity extends AppCompatActivity {
                 //If you want to use it just cast it (String) dataObject
                 cards obj = (cards) dataObject;
                 String userId = obj.getUserId();
-                usersDb.child(userId).child("connections").child("nope").child(currentUid).setValue(true);
+                usersDb.child(userId).child("connections").child("nope").child(currentUid).setValue(LocalDateTime.now().toString());
+                usersDb.child(userId).child("connections").child("yeps").child(currentUid).removeValue();
                 Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onRightCardExit(Object dataObject) {
                 cards obj = (cards) dataObject;
                 String userId = obj.getUserId();
-                usersDb.child(userId).child("connections").child("yeps").child(currentUid).setValue(true);
+                usersDb.child(userId).child("connections").child("yeps").child(currentUid).setValue(LocalDateTime.now().toString());
+                usersDb.child(userId).child("connections").child("nope").child(currentUid).removeValue();
                 isConnectionMatch(userId);
                 Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdapterAboutToEmpty(int itemsInAdapter) {
+
             }
 
             @Override
@@ -159,10 +167,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void getOppositeSexUsers(){
         usersDb.addChildEventListener(new ChildEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 if(snapshot.child("sex").getValue() != null) {
-                    if (snapshot.exists() && !snapshot.child("connections").child("nope").hasChild(currentUid) && !snapshot.child("connections").child("yeps").hasChild(currentUid) && snapshot.child("sex").getValue().toString().equals(oppositeUserSex)) {
+                    if (snapshot.exists() &&
+                            (!snapshot.child("connections").child("nope").hasChild(currentUid) || ChronoUnit.DAYS.between(LocalDateTime.parse((CharSequence) snapshot.child("connections").child("nope").child(currentUid).getValue()), LocalDateTime.now()) > 7) &&
+                            (!snapshot.child("connections").child("yeps").hasChild(currentUid) || ChronoUnit.DAYS.between(LocalDateTime.parse((CharSequence) snapshot.child("connections").child("yeps").child(currentUid).getValue()), LocalDateTime.now()) > 7) &&
+                            snapshot.child("sex").getValue().toString().equals(oppositeUserSex)) {
                         cards item = new cards(snapshot.getKey(), snapshot.child("name").getValue().toString(), snapshot.child("profileImageUrl").getValue().toString());
                         rowItems.add(item);
                         arrayAdapter.notifyDataSetChanged();
