@@ -43,13 +43,11 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Men"
-            android:id="@+id/men"/>
+            android:text="Men" />
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Women"
-            android:id="@+id/women"/>
+            android:text="Women" />
     </RadioGroup>
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,7 +65,7 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <com.rizlee.rangeseekbar.RangeSeekBar
-        android:id="@+id/ageSeekBar"
+        android:id="@+id/rangeSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10sp"
@@ -99,18 +97,17 @@
             android:paddingTop="10sp"/>
 
         <TextView
-            android:id="@+id/showDistance"
+            android:id="@+id/searchDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-
+    
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10sp"
         android:min="0"
-        android:max="142"
-        android:id="@+id/distanceSeekBar"/>
+        android:max="142"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

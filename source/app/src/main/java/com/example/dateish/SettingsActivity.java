@@ -12,8 +12,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -38,6 +41,9 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText mNameField, mPhoneField;
     private Button mBack, mConfirm;
     private ImageView mProfileImage;
+    private RadioGroup mChooseSex;
+    private RadioButton mMale, mFemale;
+    private String showSex;
     private FirebaseAuth mAuth;
     private DatabaseReference mUserDatabase;
     private String userId, name, phone, profileImageUrl, userSex;
@@ -51,8 +57,12 @@ public class SettingsActivity extends AppCompatActivity {
         mNameField = (EditText) findViewById(R.id.name);
         mPhoneField = (EditText) findViewById(R.id.phone);
         mProfileImage = (ImageView) findViewById(R.id.profileImage);
+
+        mChooseSex = (RadioGroup) findViewById(R.id.showMe);
+
         mBack = (Button) findViewById(R.id.back);
         mConfirm = (Button) findViewById(R.id.confirm);
+
 
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
@@ -105,6 +115,20 @@ public class SettingsActivity extends AppCompatActivity {
                         profileImageUrl = map.get("profileImageUrl").toString();
                         Glide.with(getApplication()).load(profileImageUrl).into(mProfileImage);
                     }
+                    if(map.get("showSex") != null){
+                        showSex = map.get("showSex").toString();
+                        if(showSex.equals("Male")){
+                            mMale = (RadioButton)findViewById(R.id.men);
+                            mMale.performClick();
+
+                        }
+                           // mChooseSex.check(R.id.men);
+                        else{
+                            mFemale = (RadioButton)findViewById(R.id.women);
+                            mFemale.setChecked(true);
+                        }
+                           // mChooseSex.check(R.id.women);
+                    }
                 }
             }
 
@@ -118,10 +142,16 @@ public class SettingsActivity extends AppCompatActivity {
     private void saveUserInformation() {
         name = mNameField.getText().toString();
         phone = mPhoneField.getText().toString();
+        int selectId = mChooseSex.getCheckedRadioButtonId();
+        final RadioButton radioButton = (RadioButton) findViewById(selectId);
 
         Map userInfo = new HashMap();
         userInfo.put("name", name);
         userInfo.put("phone", phone);
+        if(radioButton.getText().toString().equals("Men"))
+            userInfo.put("showSex", "Male");
+        else
+            userInfo.put("showSex", "Female");
         mUserDatabase.updateChildren(userInfo);
         if(resultUri != null){
             StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profileImages").child(userId);

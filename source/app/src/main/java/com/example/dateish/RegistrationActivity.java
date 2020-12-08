@@ -27,7 +27,7 @@ import java.util.Map;
 public class RegistrationActivity extends AppCompatActivity {
 
     private Button mRegister;
-    private EditText mEmail, mPassword, mName;
+    private EditText mEmail, mPassword, mName, mLastName;
 
     private RadioGroup mRadioGroup;
 
@@ -57,6 +57,7 @@ public class RegistrationActivity extends AppCompatActivity {
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
         mName = (EditText) findViewById(R.id.name);
+        mLastName = (EditText) findViewById(R.id.lastname);
 
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 
@@ -70,9 +71,10 @@ public class RegistrationActivity extends AppCompatActivity {
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
                 final String name = mName.getText().toString();
+                final String lastName = mLastName.getText().toString();
                 final String url = "https://firebasestorage.googleapis.com/v0/b/dateish-5d381.appspot.com/o/profileImages%2Fno-profile-picture-300x216.jpg?alt=media&token=be771306-e3fe-4826-bac7-606508fe64da";
-                if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name) || !radioButton.isChecked()) {
-                    Toast.makeText(RegistrationActivity.this, "sign up error", Toast.LENGTH_SHORT).show();
+                if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name) || TextUtils.isEmpty(lastName) || !radioButton.isChecked()) {
+                    Toast.makeText(RegistrationActivity.this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     if(radioButton.getText() == null){
@@ -87,9 +89,13 @@ public class RegistrationActivity extends AppCompatActivity {
                                 String userId = mAuth.getCurrentUser().getUid();
                                 DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
                                 Map userInfo = new HashMap<>();
-                                userInfo.put("name", name);
+                                userInfo.put("name", name + " " + lastName);
                                 userInfo.put("sex", radioButton.getText().toString());
                                 userInfo.put("profileImageUrl", url);
+                                if(radioButton.getText().toString().equals("Male"))
+                                    userInfo.put("showSex", "Female");
+                                else
+                                    userInfo.put("showSex", "Male");
                                 currentUserDb.updateChildren(userInfo);
                             }
                         }
