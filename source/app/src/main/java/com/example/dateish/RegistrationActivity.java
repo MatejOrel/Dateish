@@ -96,6 +96,9 @@ public class RegistrationActivity extends AppCompatActivity {
                                     userInfo.put("showSex", "Female");
                                 else
                                     userInfo.put("showSex", "Male");
+                                userInfo.put("minAge", 18);
+                                userInfo.put("maxAge", 100);
+                                userInfo.put("distance", 142);
                                 currentUserDb.updateChildren(userInfo);
                             }
                         }

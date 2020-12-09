@@ -6,12 +6,17 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.DragEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +34,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.rizlee.rangeseekbar.RangeSeekBar;
 
+import java.awt.font.NumericShaper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -38,30 +45,37 @@ import java.util.Map;
 public class SettingsActivity extends AppCompatActivity {
 
     private EditText mNameField, mPhoneField;
+    private TextView mShowAge, mShowDistance;
     private Button mBack, mConfirm;
     private ImageView mProfileImage;
     private RadioGroup mChooseSex;
     private View mMale, mFemale;
-    private String showSex;
+    private RangeSeekBar mAge;
+    private SeekBar mDistance;
     private FirebaseAuth mAuth;
     private DatabaseReference mUserDatabase;
-    private String userId, name, phone, profileImageUrl, userSex;
+    private String userId, name, phone, profileImageUrl, userSex, showSex, distance;
+    private float minAge, maxAge;
     private Uri resultUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
         mNameField = (EditText) findViewById(R.id.name);
         mPhoneField = (EditText) findViewById(R.id.phone);
         mProfileImage = (ImageView) findViewById(R.id.profileImage);
 
         mChooseSex = (RadioGroup) findViewById(R.id.showMe);
 
+        mAge = (RangeSeekBar) findViewById(R.id.ageSeekBar);
+        mShowAge = (TextView) findViewById(R.id.showAge);
+
+        mDistance = (SeekBar) findViewById(R.id.distanceSeekBar);
+        mShowDistance = (TextView) findViewById(R.id.showDistance);
+
         mBack = (Button) findViewById(R.id.back);
         mConfirm = (Button) findViewById(R.id.confirm);
-
 
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
@@ -129,6 +143,49 @@ public class SettingsActivity extends AppCompatActivity {
                             mFemale.performClick();
                         }
                     }
+                    if(map.get("minAge") != null && map.get("maxAge") != null){
+                        minAge = (Long) map.get("minAge");
+                        maxAge = (Long) map.get("maxAge");
+                        String age = (int) minAge + " - " + (int) maxAge;
+                        mShowAge.setText(age);
+                        mAge.setCurrentValues(minAge, maxAge);
+                        mAge.setListenerRealTime(new RangeSeekBar.OnRangeSeekBarRealTimeListener() {
+                            @Override
+                            public void onValuesChanging(float v, float v1) {
+
+                            }
+
+                            @Override
+                            public void onValuesChanging(int i, int i1) {
+                                String age = i + " - " + i1;
+                                mShowAge.setText(age);
+                            }
+                        });
+                    }
+                    if(map.get("distance") != null){
+                        distance = map.get("distance").toString();
+                        String dist = distance + " km";
+                        mShowDistance.setText(dist);
+                        mDistance.setProgress(Integer.parseInt(distance));
+                        mDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                String dist = progress + " km";
+                                mShowDistance.setText(dist);
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            }
+                        });
+
+                    }
                 }
             }
 
@@ -144,6 +201,9 @@ public class SettingsActivity extends AppCompatActivity {
         phone = mPhoneField.getText().toString();
         int selectId = mChooseSex.getCheckedRadioButtonId();
         final RadioButton radioButton = (RadioButton) findViewById(selectId);
+        minAge = mAge.getCurrentValues().component1();
+        maxAge = mAge.getCurrentValues().component2();
+        distance = String.valueOf(mDistance.getProgress());
 
         Map userInfo = new HashMap();
         userInfo.put("name", name);
@@ -152,6 +212,9 @@ public class SettingsActivity extends AppCompatActivity {
             userInfo.put("showSex", "Male");
         else
             userInfo.put("showSex", "Female");
+        userInfo.put("minAge", minAge);
+        userInfo.put("maxAge", maxAge);
+        userInfo.put("distance", distance);
         mUserDatabase.updateChildren(userInfo);
         if(resultUri != null){
             StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profileImages").child(userId);
