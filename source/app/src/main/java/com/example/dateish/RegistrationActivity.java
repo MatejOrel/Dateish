@@ -1,5 +1,6 @@
 package com.example.dateish;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -21,6 +22,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +48,7 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user != null){
-                    Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+                    Intent intent = new Intent(RegistrationActivity.this, SettingsActivity.class);
                     startActivity(intent);
                     finish();
                     return;
@@ -64,6 +67,7 @@ public class RegistrationActivity extends AppCompatActivity {
         mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getSharedPreferences("com.example.dateish", MODE_PRIVATE).edit().putBoolean("firstTime", true).apply();
                 int selectId = mRadioGroup.getCheckedRadioButtonId();
 
                 final RadioButton radioButton = (RadioButton) findViewById(selectId);

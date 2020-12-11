@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getSharedPreferences("com.example.dateish", MODE_PRIVATE).edit().putBoolean("firstTime", false).apply();
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
                 if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){                                            //to sm dodal sam ampak nevem ce je pravilno

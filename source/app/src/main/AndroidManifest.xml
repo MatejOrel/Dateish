@@ -3,6 +3,9 @@
     package="com.example.dateish">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -18,8 +21,7 @@
             android:name=".Matches.MatchesActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".SettingsActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".SettingsActivity" />
         <activity android:name=".ChooseLoginRegistrationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
