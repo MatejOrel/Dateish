@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
                         longtitude = location.getLongitude();
                         usersDb.child(currentUid).child("latitude").setValue(latitude);
                         usersDb.child(currentUid).child("longtitude").setValue(longtitude);
-                        getSearches();
                         if (fusedLocationClient != null) {
                             fusedLocationClient.removeLocationUpdates(locationCallback);
                         }
