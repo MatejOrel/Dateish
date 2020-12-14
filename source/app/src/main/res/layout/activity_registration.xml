@@ -10,12 +10,14 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="name"
+        android:hint="First name"
+        android:inputType="text"
         android:id="@+id/name"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="last name"
+        android:hint="Last name"
+        android:inputType="text"
         android:id="@+id/lastname"/>
     <RadioGroup
         android:layout_width="match_parent"
@@ -33,14 +35,29 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="email"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
         android:id="@+id/email"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="password"
+        android:hint="Password"
+        android:inputType="textPassword"
         android:id="@+id/password"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Repeat password"
+        android:inputType="textPassword"
+        android:id="@+id/rpassword"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show password"
+        android:id="@+id/showPass" />
 
     <Button
         android:layout_width="match_parent"

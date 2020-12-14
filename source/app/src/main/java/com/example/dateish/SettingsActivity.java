@@ -59,7 +59,7 @@ import java.util.Map;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private EditText mNameField, mPhoneField;
+    private EditText mNameField, mPhoneField, mBio;
     private TextView mShowAge, mShowDistance, mInvalidDate;
     private Button mBack, mConfirm;
     private ImageView mProfileImage;
@@ -70,7 +70,7 @@ public class SettingsActivity extends AppCompatActivity {
     private DatePicker mBirth;
     private FirebaseAuth mAuth;
     private DatabaseReference mUserDatabase;
-    private String userId, name, phone, profileImageUrl, userSex, showSex, distance, birthDate;
+    private String userId, name, phone, profileImageUrl, userSex, showSex, distance, birthDate, bio;
     private float minAge, maxAge;
     private Uri resultUri;
     private boolean firstTime;
@@ -82,6 +82,7 @@ public class SettingsActivity extends AppCompatActivity {
         mNameField = (EditText) findViewById(R.id.name);
         mPhoneField = (EditText) findViewById(R.id.phone);
         mProfileImage = (ImageView) findViewById(R.id.profileImage);
+        mBio = (EditText) findViewById(R.id.bio);
 
         mBirth = (DatePicker) findViewById(R.id.dateOfBirth);
         mInvalidDate = (TextView) findViewById(R.id.invalidDate);
@@ -183,6 +184,10 @@ public class SettingsActivity extends AppCompatActivity {
                         phone = map.get("phone").toString();
                         mPhoneField.setText(phone);
                     }
+                    if(map.get("bio") != null){
+                        bio = map.get("bio").toString();
+                        mBio.setText(bio);
+                    }
                     if(map.get("dateOfBirth") != null){
                         birthDate = map.get("dateOfBirth").toString();
                         if(!firstTime){
@@ -263,6 +268,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void saveUserInformation() {
         name = mNameField.getText().toString();
         phone = mPhoneField.getText().toString();
+        bio = mBio.getText().toString();
         int selectId = mChooseSex.getCheckedRadioButtonId();
         final RadioButton radioButton = (RadioButton) findViewById(selectId);
         minAge = mAge.getCurrentValues().component1();
@@ -280,6 +286,7 @@ public class SettingsActivity extends AppCompatActivity {
         Map userInfo = new HashMap();
         userInfo.put("name", name);
         userInfo.put("phone", phone);
+        userInfo.put("bio", bio);
         userInfo.put("dateOfBirth", birthDate);
         if(radioButton.getText().toString().equals("Men"))
             userInfo.put("showSex", "Male");
@@ -342,5 +349,12 @@ public class SettingsActivity extends AppCompatActivity {
             resultUri = imageUri;
             mProfileImage.setImageURI(resultUri);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(firstTime)
+            return;
+        super.onBackPressed();
     }
 }

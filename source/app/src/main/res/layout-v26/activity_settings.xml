@@ -26,6 +26,7 @@
         android:id="@+id/name"
         android:background="@null"
         android:hint="Name"
+        android:inputType="text"
         android:layout_marginBottom="20sp"/>
 
     <EditText
@@ -37,9 +38,25 @@
         android:layout_marginBottom="20sp"
         android:inputType="phone"/>
 
+    <EditText
+        android:id="@+id/bio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:gravity="top|left"
+        android:inputType="textMultiLine"
+        android:overScrollMode="always"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="vertical"
+        android:lines="6"
+        android:scrollHorizontally="false"
+        android:textSize="15dp"
+        android:layout_marginBottom="10sp"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Date of birth:" />
     <LinearLayout
         android:layout_width="wrap_content"
@@ -61,6 +78,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Show me:" />
     <RadioGroup
         android:layout_width="match_parent"
@@ -84,13 +102,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:text="Show age:"
             android:paddingRight="10sp"/>
 
         <TextView
             android:id="@+id/showAge"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
     </LinearLayout>
     <com.rizlee.rangeseekbar.RangeSeekBar
         android:id="@+id/ageSeekBar"
@@ -117,13 +138,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Search distance:"
+            android:textColor="@color/black"
             android:paddingRight="10sp"
             android:paddingTop="10sp"/>
 
         <TextView
             android:id="@+id/showDistance"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
     </LinearLayout>
     
     <SeekBar

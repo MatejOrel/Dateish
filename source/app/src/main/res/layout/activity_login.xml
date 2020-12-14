@@ -11,13 +11,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="email"
+        android:inputType="textEmailAddress"
         android:id="@+id/email"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="password"
+        android:inputType="textPassword"
         android:id="@+id/password"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show password"
+        android:id="@+id/showPass" />
 
     <Button
         android:layout_width="match_parent"

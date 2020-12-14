@@ -3,8 +3,12 @@ package com.example.dateish;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -12,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private Button mLogin;
     private EditText mEmail, mPassword;
+    private CheckBox mShowPassword;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
@@ -48,6 +54,20 @@ public class LoginActivity extends AppCompatActivity {
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
 
+        mShowPassword = (CheckBox) findViewById(R.id.showPass);
+        mShowPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    mPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                }
+                else {
+                    mPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+
+            }
+        });
+
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,14 +75,19 @@ public class LoginActivity extends AppCompatActivity {
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
                 if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){                                            //to sm dodal sam ampak nevem ce je pravilno
-                    Toast.makeText(LoginActivity.this, "sign in error", Toast.LENGTH_SHORT).show();       //preverja ce sta vnesena email in password
+                    Toast.makeText(LoginActivity.this, "Please fill out all fields", Toast.LENGTH_SHORT).show();       //preverja ce sta vnesena email in password
                 }                                                                                                      //
                 else{
                     mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(!task.isSuccessful()){
-                                Toast.makeText(LoginActivity.this, "sign in error", Toast.LENGTH_SHORT).show();
+                                task.addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
                         }
                     });

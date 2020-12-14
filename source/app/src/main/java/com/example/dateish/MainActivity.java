@@ -1,27 +1,25 @@
 package com.example.dateish;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.dateish.Cards.arrayAdapter;
 import com.example.dateish.Cards.cards;
@@ -32,7 +30,6 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -61,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
     private LocationCallback locationCallback;
     private double latitude, longtitude;
     private int locationRequestCode = 1000;
-    private boolean isGPS = false;
 
     List<cards> rowItems;
 
@@ -75,13 +71,16 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUid = mAuth.getCurrentUser().getUid();
 
+        checkAgeSettings();
+        checkUserSex();
+        checkDistanceSettings();
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10 * 1000); // 10 seconds
-        locationRequest.setFastestInterval(5 * 1000); // 5 seconds
-
+        locationRequest.setInterval(1000); // 10 seconds
+        locationRequest.setFastestInterval(1000); // 5 seconds
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -90,13 +89,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
-                        checkAgeSettings();
-                        checkUserSex();
                         latitude = location.getLatitude();
                         longtitude = location.getLongitude();
                         usersDb.child(currentUid).child("latitude").setValue(latitude);
                         usersDb.child(currentUid).child("longtitude").setValue(longtitude);
-                        checkDistanceSettings();
                         getSearches();
                         if (fusedLocationClient != null) {
                             fusedLocationClient.removeLocationUpdates(locationCallback);
@@ -105,12 +101,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
-       /* if (!isGPS) {
-            Toast.makeText(this, "Please turn on GPS", Toast.LENGTH_SHORT).show();
-            return;
-        }*/
-        getLocation();
 
         rowItems = new ArrayList<>();
 
@@ -163,41 +153,59 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         // Optionally add an OnItemClickListener
         flingContainer.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
+                cards obj = (cards) dataObject;
+                String userId = obj.getUserId();
+                Intent intent = new Intent(MainActivity.this, ShowProfile.class);
+                intent.putExtra("userId", userId);
+                startActivity(intent);
                 Toast.makeText(MainActivity.this, "click", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            new AlertDialog.Builder(this)
+                    .setTitle("GPS required")
+                    .setMessage("Please turn on GPS!")
+                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    }).show();
+        }
+        getLocation();
+    }
+
     private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, locationRequestCode);
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, locationRequestCode);
 
         }
         else {
             fusedLocationClient.getLastLocation().addOnSuccessListener(MainActivity.this, location -> {
                 if (location != null) {
-                    checkAgeSettings();
-                    checkUserSex();
                     latitude = location.getLatitude();
                     longtitude = location.getLongitude();
                     usersDb.child(currentUid).child("latitude").setValue(latitude);
                     usersDb.child(currentUid).child("longtitude").setValue(longtitude);
-                    checkDistanceSettings();
                     getSearches();
-
-                }
-                else {
-                    fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
                 }
             });
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -205,28 +213,11 @@ public class MainActivity extends AppCompatActivity {
             case 1000: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, locationRequestCode);
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
+                    fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
                     fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                         if (location != null) {
-                            checkAgeSettings();
-                            checkUserSex();
-                            latitude = location.getLatitude();
-                            longtitude = location.getLongitude();
-                            usersDb.child(currentUid).child("latitude").setValue(latitude);
-                            usersDb.child(currentUid).child("longtitude").setValue(longtitude);
-                            checkDistanceSettings();
-                            getSearches();
+                            getLocation();
                         }
-                        else
-                            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
                     });
                 }
                 else {
@@ -251,58 +242,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*private void checkPermissionGranted() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //permission not granted
-            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                requestPermissionLauncher.launch(
-                        Manifest.permission.ACCESS_COARSE_LOCATION);
-            } else {
-                //request the permission
-                requestPermissionLauncher.launch(
-                        Manifest.permission.ACCESS_COARSE_LOCATION);
-            }
-        } else {
-            requestPermissionLauncher.launch(
-                    Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-       if (ContextCompat.checkSelfPermission(
-                MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED) {
-            checkAgeSettings();
-            checkUserSex();
-            // You can use the API that requires the permission.
-        } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            // In an educational UI, explain to the user why your app requires this
-            // permission for a specific feature to behave as expected. In this UI,
-            // include a "cancel" or "no thanks" button that allows the user to
-            // continue using your app without granting the permission.
-            new AlertDialog.Builder(this)
-                    .setTitle("Permission required")
-                    .setMessage("Sorry, in order to use the app you must allow location access. Otherwise we won't be able to show any other people around you.")
-
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            checkPermissionGranted();
-                        }
-                    })
-                    .show();
-        } else {
-            // You can directly ask for the permission.
-            // The registered ActivityResultCallback gets the result of this request.
-            requestPermissionLauncher.launch(
-                    Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            // You can directly ask for the permission.
-            // The registered ActivityResultCallback gets the result of this request.
-            requestPermissionLauncher.launch(
-                    Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-    }*/
-
     private void isConnectionMatch(String userId) {
         DatabaseReference currentUserConnectionsDb = usersDb.child(currentUid).child("connections").child("yeps").child(userId);
         currentUserConnectionsDb.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -324,38 +263,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    /*public void getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            requestPermissionLauncher.launch(
-                    Manifest.permission.ACCESS_COARSE_LOCATION);
-            return;
-        }
-
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            // Logic to handle location object
-                            latitude = location.getLatitude();
-                            longtitude = location.getLongitude();
-                            usersDb.child(currentUid).child("latitude").setValue(latitude);
-                            usersDb.child(currentUid).child("longtitude").setValue(longtitude);
-                            checkDistanceSettings();
-                            getSearches();
-                        }
-                    }
-                });
-    }*/
 
     public void checkAgeSettings(){
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -407,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
                 * Math.cos(deg2rad(theta));
         dist = Math.acos(dist);
         dist = rad2deg(dist);
-        dist = dist * 60 * 1.1515;
+        dist = (dist * 60 * 1.1515) / 0.62137;
         return (dist);
     }
 
@@ -457,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
                             !snapshot.getKey().equals(currentUid.toString())&&
                             snapshot.child("latitude").getValue() != null && snapshot.child("longtitude").getValue() != null &&
                             distance(Double.parseDouble(snapshot.child("latitude").getValue().toString()), Double.parseDouble(snapshot.child("longtitude").getValue().toString()), latitude, longtitude) < distance) {
-                        cards item = new cards(snapshot.getKey(), snapshot.child("name").getValue().toString(), snapshot.child("profileImageUrl").getValue().toString());
+                        cards item = new cards(snapshot.getKey(), snapshot.child("name").getValue().toString(), snapshot.child("dateOfBirth").getValue().toString(), snapshot.child("profileImageUrl").getValue().toString());
                         rowItems.add(item);
                         arrayAdapter.notifyDataSetChanged();
                     }

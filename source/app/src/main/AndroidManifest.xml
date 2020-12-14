@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.dateish">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -14,15 +16,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Dateish">
+
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="false" />
+        <!--
+               Set to true if your app is Standalone, that is, it does not require the handheld
+               app to run.
+        -->
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+
         <activity
             android:name=".Chats.ChatActivity"
-            android:parentActivityName=".Matches.MatchesActivity" />
+            android:parentActivityName=".Matches.MatchesActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Matches.MatchesActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".SettingsActivity" />
-        <activity android:name=".ChooseLoginRegistrationActivity">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ShowProfile"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SettingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ChooseLoginRegistrationActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,11 +50,14 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:parentActivityName=".ChooseLoginRegistrationActivity" />
+            android:parentActivityName=".ChooseLoginRegistrationActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".RegistrationActivity"
-            android:parentActivityName=".ChooseLoginRegistrationActivity" />
-        <activity android:name=".MainActivity" />
+            android:parentActivityName=".ChooseLoginRegistrationActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
