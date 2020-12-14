@@ -9,22 +9,24 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="500sp"
+        android:layout_height="400sp"
         android:id="@+id/profileImage"
         android:src="@mipmap/ic_launcher"
-        android:layout_marginBottom="20sp"/>
+        android:layout_marginBottom="10sp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/name"
-        android:background="@null" />
+        android:background="@null"
+        android:textSize="20sp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/distance"
         android:background="@null"
+        android:textSize="20sp"
         android:layout_marginBottom="20sp"/>
 
     <View
@@ -37,6 +39,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/bio"
         android:background="@null"
+        android:textSize="12sp"
         android:layout_marginBottom="20sp"/>
 
 </LinearLayout>

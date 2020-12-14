@@ -301,7 +301,8 @@ public class SettingsActivity extends AppCompatActivity {
             Bitmap bitmap = null;
 
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), resultUri);
+                RotateBitmap rotateBitmap = new RotateBitmap();
+                bitmap = rotateBitmap.HandleSamplingAndRotationBitmap(SettingsActivity.this, resultUri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
