@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -40,12 +41,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolders> {
         if(chatList.get(position).getCurrentUser()){
             holder.mMessage.setGravity(Gravity.END);
             holder.mMessage.setTextColor(Color.parseColor("#404040"));
-            holder.mContainer.setBackgroundColor(Color.parseColor("#F4F4F4"));
+            holder.mContainer.setGravity(Gravity.END);
+            holder.mMessage.setBackground(ContextCompat.getDrawable(context, R.drawable.rounded_text_right));
         }
         else{
             holder.mMessage.setGravity(Gravity.START);
             holder.mMessage.setTextColor(Color.parseColor("#FFFFFF"));
-            holder.mContainer.setBackgroundColor(Color.parseColor("#2DB4C8"));
+            holder.mContainer.setGravity(Gravity.START);
+            holder.mMessage.setBackground(ContextCompat.getDrawable(context, R.drawable.rounded_text_left));
         }
     }
 

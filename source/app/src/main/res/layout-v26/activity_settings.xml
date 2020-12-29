@@ -1,173 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="fill_parent"
-    android:layout_width="fill_parent">
-<LinearLayout
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsActivity"
-    android:orientation="vertical"
-    android:padding="20sp"
-    android:scrollbars="vertical">
-
-    <ImageView
-        android:layout_width="100sp"
-        android:layout_height="100sp"
-        android:id="@+id/profileImage"
-        android:src="@mipmap/ic_launcher"
-        android:layout_marginBottom="20sp"/>
-
-    <EditText
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/name"
-        android:background="@null"
-        android:hint="Name"
-        android:inputType="text"
-        android:layout_marginBottom="20sp"/>
+        android:id="@+id/info"
+        app:contentInsetStart="0dp"
+        android:background="#f23b5f">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp"
+                android:textSize="20sp"/>
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".SettingsActivity"
+            android:orientation="vertical"
+            android:padding="20sp"
+            android:scrollbars="vertical">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/phone"
-        android:background="@null"
-        android:hint="Phone"
-        android:layout_marginBottom="20sp"
-        android:inputType="phone"/>
+            <ImageView
+                android:layout_width="100sp"
+                android:layout_height="100sp"
+                android:id="@+id/profileImage"
+                android:src="@mipmap/ic_launcher"
+                android:layout_marginBottom="20sp"/>
 
-    <EditText
-        android:id="@+id/bio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/border"
-        android:gravity="top|left"
-        android:inputType="textMultiLine"
-        android:overScrollMode="always"
-        android:scrollbarStyle="insideInset"
-        android:scrollbars="vertical"
-        android:lines="6"
-        android:scrollHorizontally="false"
-        android:textSize="15dp"
-        android:layout_marginBottom="10sp"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/name"
+                android:background="@null"
+                android:hint="Name"
+                android:inputType="text"
+                android:layout_marginBottom="20sp"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:text="Date of birth:" />
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <DatePicker
-            android:id="@+id/dateOfBirth"
-            android:layout_width="wrap_content"
-            android:layout_height="110dp"
-            android:calendarViewShown="false"
-            android:datePickerMode="spinner" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/phone"
+                android:background="@null"
+                android:hint="Phone"
+                android:layout_marginBottom="20sp"
+                android:inputType="phone"/>
 
-        <TextView
-            android:id="@+id/invalidDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
-    </LinearLayout>
+            <EditText
+                android:id="@+id/bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:gravity="top|left"
+                android:inputType="textMultiLine"
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
+                android:lines="6"
+                android:scrollHorizontally="false"
+                android:textSize="15dp"
+                android:layout_marginBottom="10sp"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:text="Show me:" />
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/showMe">
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Men"
-            android:id="@+id/men"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Women"
-            android:id="@+id/women"/>
-    </RadioGroup>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="Show age:"
-            android:paddingRight="10sp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="Date of birth:" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <DatePicker
+                    android:id="@+id/dateOfBirth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="110dp"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner" />
 
-        <TextView
-            android:id="@+id/showAge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textStyle="bold"/>
-    </LinearLayout>
-    <com.rizlee.rangeseekbar.RangeSeekBar
-        android:id="@+id/ageSeekBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
-        app:active="true"
-        app:additionalTextMargin="6dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:roundedCorners="true"
-        app:minValue="18"
-        app:maxValue="100"
-        app:sideColor="@color/black"
-        app:transitionColor="@color/black"
-        app:centerColor="@color/black"/>
+                <TextView
+                    android:id="@+id/invalidDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search distance:"
-            android:textColor="@color/black"
-            android:paddingRight="10sp"
-            android:paddingTop="10sp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="Show me:" />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/showMe">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Men"
+                    android:id="@+id/men"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Women"
+                    android:id="@+id/women"/>
+            </RadioGroup>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="Show age:"
+                    android:paddingRight="10sp"/>
 
-        <TextView
-            android:id="@+id/showDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textStyle="bold"/>
-    </LinearLayout>
-    
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
-        android:min="0"
-        android:max="142"
-        android:id="@+id/distanceSeekBar"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/confirm"
-        android:text="Confirm"/>
+                <TextView
+                    android:id="@+id/showAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+            <com.rizlee.rangeseekbar.RangeSeekBar
+                android:id="@+id/ageSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                app:thumbsNormal="@drawable/thumb"
+                app:thumbsPressed="@drawable/thumb"
+                app:active="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:roundedCorners="true"
+                app:minValue="18"
+                app:maxValue="100"
+                app:barHeight="2.5dp"
+                app:sideColor="#dedede"
+                app:transitionColor="#f23b5f"
+                app:centerColor="#f23b5f" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/back"
-        android:text="Back"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Search distance:"
+                    android:textColor="@color/black"
+                    android:paddingRight="10sp"
+                    android:paddingTop="10sp"/>
 
+                <TextView
+                    android:id="@+id/showDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:min="0"
+                android:max="142"
+                android:thumbTint="#f23b5f"
+                android:progressTint="#f23b5f"
+                android:id="@+id/distanceSeekBar"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/confirm"
+                android:text="Confirm"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/back"
+                android:text="Back"/>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
-</ScrollView>

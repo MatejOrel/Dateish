@@ -53,6 +53,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private EditText mNameField, mPhoneField, mBio;
     private TextView mShowAge, mShowDistance, mInvalidDate;
-    private Button mBack, mConfirm;
+    private Button mBack, mConfirm, mPickImages;
     private ImageView mProfileImage;
     private RadioGroup mChooseSex;
     private View mMale, mFemale;
@@ -70,7 +71,7 @@ public class SettingsActivity extends AppCompatActivity {
     private DatePicker mBirth;
     private FirebaseAuth mAuth;
     private DatabaseReference mUserDatabase;
-    private String userId, name, phone, profileImageUrl, userSex, showSex, distance, birthDate, bio;
+    private String userId, name, phone, profileImageUrl, showSex, distance, birthDate, bio;
     private float minAge, maxAge;
     private Uri resultUri;
     private boolean firstTime;
@@ -104,7 +105,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         if(getSharedPreferences("com.example.dateish", MODE_PRIVATE).getBoolean("firstTime", true)){
             firstTime = true;
-            getSharedPreferences("com.example.dateish", MODE_PRIVATE).edit().putBoolean("firstTime", false).apply();
         }
         else
             firstTime = false;
@@ -195,9 +195,6 @@ public class SettingsActivity extends AppCompatActivity {
                         }
                         mBirth.updateDate(Integer.parseInt(birthDate.split("-")[0]), Integer.parseInt(birthDate.split("-")[1]) - 1, Integer.parseInt(birthDate.split("-")[2]));
                     }
-                    if(map.get("sex") != null){
-                        userSex = map.get("sex").toString();
-                    }
                     if(map.get("profileImageUrl") != null){
                         profileImageUrl = map.get("profileImageUrl").toString();
                         Glide.with(getApplication()).load(profileImageUrl).into(mProfileImage);
@@ -266,6 +263,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void saveUserInformation() {
+        getSharedPreferences("com.example.dateish", MODE_PRIVATE).edit().putBoolean("firstTime", false).apply();
         name = mNameField.getText().toString();
         phone = mPhoneField.getText().toString();
         bio = mBio.getText().toString();

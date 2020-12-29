@@ -3,14 +3,21 @@ package com.example.dateish.Chats;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.example.dateish.Matches.MatchesActivity;
 import com.example.dateish.Matches.MatchesAdapter;
 import com.example.dateish.Matches.MatchesObject;
@@ -28,17 +35,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ChatActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mChatAdapter;
     private RecyclerView.LayoutManager mChatLayoutManager;
+    private androidx.appcompat.widget.Toolbar mToolbar;
+    private CircleImageView mProfileImage;
+    private TextView mUserName;
 
     private EditText mSendEditText;
     private Button mSendButton;
 
     private String currentUserID, matchId, chatId;
 
-    DatabaseReference mDatabaseUser, mDatabaseChat;
+    DatabaseReference mDatabaseUser, mDatabaseChat, mSender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +65,40 @@ public class ChatActivity extends AppCompatActivity {
 
         getChatId();
 
+        mToolbar = findViewById(R.id.info);
+
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("");
+
+        mProfileImage = (CircleImageView) findViewById(R.id.profileImage);
+        mUserName = (TextView) findViewById(R.id.name);
+
+        mSender = FirebaseDatabase.getInstance().getReference().child("Users").child(matchId);
+        mSender.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    if(snapshot.child("name").getValue() != null){
+                        mUserName.setTextColor(Color.BLACK);
+                        mUserName.setText(snapshot.child("name").getValue().toString());
+                    }
+                    if(snapshot.child("profileImageUrl").getValue() != null){
+                        Glide.with(ChatActivity.this).load(snapshot.child("profileImageUrl").getValue().toString()).into(mProfileImage);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        String userId = getIntent().getStringExtra("matchId");
+
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setNestedScrollingEnabled(true);
         mChatLayoutManager = new LinearLayoutManager(ChatActivity.this);
         mRecyclerView.setLayoutManager(mChatLayoutManager);
         mChatAdapter = new ChatAdapter(getDataSetChat(), ChatActivity.this);
@@ -124,6 +167,7 @@ public class ChatActivity extends AppCompatActivity {
                         ChatObject newMessage = new ChatObject(message, currentUser);
                         resultChat.add(newMessage);
                         mChatAdapter.notifyDataSetChanged();
+                        mRecyclerView.scrollToPosition(mChatAdapter.getItemCount() - 1);
                     }
                 }
             }

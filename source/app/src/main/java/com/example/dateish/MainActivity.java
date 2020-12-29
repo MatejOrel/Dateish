@@ -41,7 +41,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(getSharedPreferences("com.example.dateish", MODE_PRIVATE).getBoolean("firstTime", true)){
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            finish();
+        }
         usersDb = FirebaseDatabase.getInstance().getReference().child("Users");
 
         mAuth = FirebaseAuth.getInstance();
@@ -104,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         rowItems = new ArrayList<>();
 
         arrayAdapter = new arrayAdapter(this, R.layout.item, rowItems);
-
+        
         SwipeFlingAdapterView flingContainer = (SwipeFlingAdapterView) findViewById(R.id.frame);
 
         flingContainer.setAdapter(arrayAdapter);
@@ -125,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 //If you want to use it just cast it (String) dataObject
                 cards obj = (cards) dataObject;
                 String userId = obj.getUserId();
-                usersDb.child(userId).child("connections").child("nope").child(currentUid).setValue(LocalDateTime.now().toString());
+                usersDb.child(userId).child("connections").child("nope").child(currentUid).setValue(LocalDate.now().toString());
                 usersDb.child(userId).child("connections").child("yeps").child(currentUid).removeValue();
                 Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
             }
@@ -135,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             public void onRightCardExit(Object dataObject) {
                 cards obj = (cards) dataObject;
                 String userId = obj.getUserId();
-                usersDb.child(userId).child("connections").child("yeps").child(currentUid).setValue(LocalDateTime.now().toString());
+                usersDb.child(userId).child("connections").child("yeps").child(currentUid).setValue(LocalDate.now().toString());
                 usersDb.child(userId).child("connections").child("nope").child(currentUid).removeValue();
                 isConnectionMatch(userId);
                 Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
@@ -197,7 +201,8 @@ public class MainActivity extends AppCompatActivity {
                     longtitude = location.getLongitude();
                     usersDb.child(currentUid).child("latitude").setValue(latitude);
                     usersDb.child(currentUid).child("longtitude").setValue(longtitude);
-                    getSearches();
+                    if (rowItems.isEmpty())
+                        getSearches();
                 }
             });
         }
@@ -352,8 +357,8 @@ public class MainActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 if(snapshot.child("sex").getValue() != null) {
                     if (snapshot.exists() &&
-                            (!snapshot.child("connections").child("nope").hasChild(currentUid) || ChronoUnit.DAYS.between(LocalDateTime.parse((CharSequence) snapshot.child("connections").child("nope").child(currentUid).getValue()), LocalDateTime.now()) > 1) &&
-                            (!snapshot.child("connections").child("yeps").hasChild(currentUid) || ChronoUnit.DAYS.between(LocalDateTime.parse((CharSequence) snapshot.child("connections").child("yeps").child(currentUid).getValue()), LocalDateTime.now()) > 1) &&
+                            (!snapshot.child("connections").child("nope").hasChild(currentUid) || ChronoUnit.DAYS.between(LocalDate.parse((CharSequence) snapshot.child("connections").child("nope").child(currentUid).getValue()), LocalDate.now()) > 1) &&
+                            (!snapshot.child("connections").child("yeps").hasChild(currentUid) || ChronoUnit.DAYS.between(LocalDate.parse((CharSequence) snapshot.child("connections").child("yeps").child(currentUid).getValue()), LocalDate.now()) > 1) &&
                             !snapshot.child("connections").child("matches").hasChild(currentUid) &&
                             snapshot.child("sex").getValue().toString().equals(oppositeUserSex) &&
                             snapshot.child("dateOfBirth").getValue() != null &&

@@ -7,32 +7,37 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="logoutUser"
-            android:text="Sign Out"/>
-
-        <Button
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="goToMatches"
-            android:text="Matches"/>
-
-        <Button
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="goToSettings"
-            android:text="Settings"/>
-
-    </LinearLayout>
+        android:id="@+id/info"
+        app:contentInsetStart="0dp"
+        android:background="#f23b5f">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_baseline_login_24"
+                android:onClick="logoutUser"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="15dp"/>
+            <ImageButton
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_baseline_chat_24"
+                android:onClick="goToMatches"
+                android:layout_centerInParent="true"/>
+            <ImageButton
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_baseline_settings_24"
+                android:onClick="goToSettings"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="15dp"/>
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
 
     <com.lorentzos.flingswipe.SwipeFlingAdapterView
         android:id="@+id/frame"

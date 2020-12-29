@@ -19,7 +19,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/name"
         android:background="@null"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:layout_marginStart="20dp"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -27,7 +28,8 @@
         android:id="@+id/distance"
         android:background="@null"
         android:textSize="20sp"
-        android:layout_marginBottom="20sp"/>
+        android:layout_marginBottom="20sp"
+        android:layout_marginStart="20dp"/>
 
     <View
         android:layout_width="match_parent"
@@ -40,6 +42,7 @@
         android:id="@+id/bio"
         android:background="@null"
         android:textSize="12sp"
-        android:layout_marginBottom="20sp"/>
+        android:layout_marginBottom="20sp"
+        android:layout_marginStart="20dp"/>
 
 </LinearLayout>
