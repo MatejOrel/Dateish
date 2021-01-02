@@ -42,23 +42,41 @@
                 android:src="@mipmap/ic_launcher"
                 android:layout_marginBottom="20sp"/>
 
-            <EditText
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/name"
-                android:background="@null"
-                android:hint="Name"
-                android:inputType="text"
-                android:layout_marginBottom="20sp"/>
+                android:text="Name:"
+                android:textColor="@color/black"
+                android:paddingBottom="8dp"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/name"
+                android:hint="Name"
+                android:inputType="text"
+                android:layout_marginBottom="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone:"
+                android:textColor="@color/black"
+                android:paddingBottom="8dp"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/phone"
-                android:background="@null"
-                android:hint="Phone"
                 android:layout_marginBottom="20sp"
+                android:hint="070 ..."
                 android:inputType="phone"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bio:"
+                android:textColor="@color/black"
+                android:paddingBottom="8dp"/>
 
             <EditText
                 android:id="@+id/bio"
@@ -73,6 +91,7 @@
                 android:lines="6"
                 android:scrollHorizontally="false"
                 android:textSize="15dp"
+                android:hint="Write something about you..."
                 android:layout_marginBottom="10sp"/>
 
             <TextView
@@ -101,10 +120,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
+                android:paddingBottom="5dp"
                 android:text="Show me:" />
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="13dp"
                 android:id="@+id/showMe">
                 <RadioButton
                     android:layout_width="wrap_content"
