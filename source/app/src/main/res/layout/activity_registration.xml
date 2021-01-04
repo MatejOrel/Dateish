@@ -64,4 +64,10 @@
         android:layout_height="wrap_content"
         android:text="Register"
         android:id="@+id/register"/>
+
+    <ImageView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="centerCrop"
+    android:src="@drawable/backgroundish"/>
 </LinearLayout>

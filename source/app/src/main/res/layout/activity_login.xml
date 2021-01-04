@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:hint="email"
         android:inputType="textEmailAddress"
-        android:id="@+id/email"/>
+        android:id="@+id/email"
+        android:paddingTop="20dp"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -32,4 +33,10 @@
         android:layout_height="wrap_content"
         android:text="Login"
         android:id="@+id/login"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/backgroundish" />
 </LinearLayout>
