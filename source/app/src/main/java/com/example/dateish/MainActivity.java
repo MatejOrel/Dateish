@@ -131,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                 String userId = obj.getUserId();
                 usersDb.child(userId).child("connections").child("nope").child(currentUid).setValue(LocalDate.now().toString());
                 usersDb.child(userId).child("connections").child("yeps").child(currentUid).removeValue();
-                Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
             }
 
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -142,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
                 usersDb.child(userId).child("connections").child("yeps").child(currentUid).setValue(LocalDate.now().toString());
                 usersDb.child(userId).child("connections").child("nope").child(currentUid).removeValue();
                 isConnectionMatch(userId);
-                Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -165,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, ShowProfile.class);
                 intent.putExtra("userId", userId);
                 startActivity(intent);
-                Toast.makeText(MainActivity.this, "click", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -251,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    Toast.makeText(MainActivity.this, "new Connection", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "New match!", Toast.LENGTH_LONG).show();
 
                     String key = FirebaseDatabase.getInstance().getReference().child("Chat").push().getKey();
 
